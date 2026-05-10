@@ -1,13 +1,14 @@
 const { Telegraf, Markup } = require('telegraf')
+const http = require('http') // ← забыл добавить
 
-const bot = new Telegraf('8385890879:AAEwDmcd-97AN_Hp2G9CO3UUOhaE26IGL2s') // токен из BotFather
+const bot = new Telegraf(process.env.BOT_TOKEN) // ← токен убери из кода!
 
 // Кнопка открытия Mini App
 const miniAppButton = Markup.keyboard([
-  [Markup.button.webApp('🚀 Открыть портфолио', 't.me/VMportfolio_bot/devfolio.')]
+  [Markup.button.webApp('🚀 Открыть портфолио', 'https://t.me/VMportfolio_bot/devfolio')] // ← https:// и без точки в конце
 ]).resize()
 
-// /startt.me/VMportfolio_bot/devfolio.
+// /start
 bot.start((ctx) => {
   ctx.reply(
     `👋 Привет, ${ctx.from.first_name}!\n\nЯ бот-портфолио разработчика VM.\nНажми кнопку ниже, чтобы посмотреть проекты 👇`,
@@ -48,9 +49,14 @@ bot.on('text', (ctx) => {
   ctx.reply('Используй /help чтобы увидеть команды 😊')
 })
 
+// HTTP сервер для Render
+const PORT = process.env.PORT || 3000
+http.createServer((req, res) => res.end('Bot is running')).listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
+
 bot.launch()
 console.log('Бот запущен!')
 
-// Graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'))
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
