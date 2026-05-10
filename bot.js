@@ -3,22 +3,21 @@ const http = require('http')
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
-// Главное меню с кнопками
-const mainMenu = Markup.keyboard([
-  ['👨‍💻 Обо мне', '📬 Контакты'],
-  ['❓ Помощь']
-]).resize()
-
 // /start
 bot.start((ctx) => {
   ctx.reply(
     `👋 Привет, ${ctx.from.first_name}!\n\nЯ бот-портфолио разработчика VM.\nВыбери раздел 👇`,
-    mainMenu
+    Markup.inlineKeyboard([
+      [Markup.button.callback('👨‍💻 Обо мне', 'about')],
+      [Markup.button.callback('📬 Контакты', 'contacts')],
+      [Markup.button.callback('❓ Помощь', 'help')]
+    ])
   )
 })
 
-// Обработка кнопок
-bot.hears('👨‍💻 Обо мне', (ctx) => {
+// Обработка инлайн кнопок
+bot.action('about', (ctx) => {
+  ctx.answerCbQuery()
   ctx.reply(
     '👨‍💻 Я — VM, fullstack разработчик\n\n' +
     '🔧 Стек: Node.js, React, Python\n' +
@@ -26,7 +25,8 @@ bot.hears('👨‍💻 Обо мне', (ctx) => {
   )
 })
 
-bot.hears('📬 Контакты', (ctx) => {
+bot.action('contacts', (ctx) => {
+  ctx.answerCbQuery()
   ctx.reply(
     '📬 Связаться со мной:\n\n' +
     'GitHub: https://github.com/vrpottot\n' +
@@ -34,7 +34,8 @@ bot.hears('📬 Контакты', (ctx) => {
   )
 })
 
-bot.hears('❓ Помощь', (ctx) => {
+bot.action('help', (ctx) => {
+  ctx.answerCbQuery()
   ctx.reply(
     '📌 Разделы:\n\n' +
     '👨‍💻 Обо мне — информация о разработчике\n' +
@@ -45,7 +46,14 @@ bot.hears('❓ Помощь', (ctx) => {
 
 // Если написали что-то непонятное
 bot.on('text', (ctx) => {
-  ctx.reply('Нажми на кнопку ниже 👇', mainMenu)
+  ctx.reply(
+    'Выбери раздел 👇',
+    Markup.inlineKeyboard([
+      [Markup.button.callback('👨‍💻 Обо мне', 'about')],
+      [Markup.button.callback('📬 Контакты', 'contacts')],
+      [Markup.button.callback('❓ Помощь', 'help')]
+    ])
+  )
 })
 
 // HTTP сервер для Render
