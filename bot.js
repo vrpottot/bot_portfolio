@@ -7,7 +7,6 @@ const bot = new Telegraf(process.env.BOT_TOKEN) // ← токен убери и�
 bot.help((ctx) => {
   ctx.reply(
     '📌 Доступные команды:\n\n' +
-    '/start — главное меню\n' +
     '/about — обо мне\n' +
     '/contacts — контакты'
   )
@@ -26,8 +25,8 @@ bot.command('about', (ctx) => {
 bot.command('contacts', (ctx) => {
   ctx.reply(
     '📬 Связаться со мной:\n\n' +
-    'GitHub: github.com/vm\n' +
-    'Email: vm@example.com'
+    'GitHub: https://github.com/vrpottot\n' +
+    'TG: @tuttuto0'
   )
 })
 
