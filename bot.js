@@ -1,19 +1,24 @@
 const { Telegraf, Markup } = require('telegraf')
-const http = require('http') // ← забыл добавить
+const http = require('http')
 
-const bot = new Telegraf(process.env.BOT_TOKEN) // ← токен убери из кода!
+const bot = new Telegraf(process.env.BOT_TOKEN)
 
-// /help
-bot.help((ctx) => {
+// Главное меню с кнопками
+const mainMenu = Markup.keyboard([
+  ['👨‍💻 Обо мне', '📬 Контакты'],
+  ['❓ Помощь']
+]).resize()
+
+// /start
+bot.start((ctx) => {
   ctx.reply(
-    '📌 Доступные команды:\n\n' +
-    '/about — обо мне\n' +
-    '/contacts — контакты'
+    `👋 Привет, ${ctx.from.first_name}!\n\nЯ бот-портфолио разработчика VM.\nВыбери раздел 👇`,
+    mainMenu
   )
 })
 
-// /about
-bot.command('about', (ctx) => {
+// Обработка кнопок
+bot.hears('👨‍💻 Обо мне', (ctx) => {
   ctx.reply(
     '👨‍💻 Я — VM, fullstack разработчик\n\n' +
     '🔧 Стек: Node.js, React, Python\n' +
@@ -21,8 +26,7 @@ bot.command('about', (ctx) => {
   )
 })
 
-// /contacts
-bot.command('contacts', (ctx) => {
+bot.hears('📬 Контакты', (ctx) => {
   ctx.reply(
     '📬 Связаться со мной:\n\n' +
     'GitHub: https://github.com/vrpottot\n' +
@@ -30,9 +34,18 @@ bot.command('contacts', (ctx) => {
   )
 })
 
+bot.hears('❓ Помощь', (ctx) => {
+  ctx.reply(
+    '📌 Разделы:\n\n' +
+    '👨‍💻 Обо мне — информация о разработчике\n' +
+    '📬 Контакты — как связаться\n' +
+    '📦 Проекты — открой Mini App'
+  )
+})
+
 // Если написали что-то непонятное
 bot.on('text', (ctx) => {
-  ctx.reply('Используй /help чтобы увидеть команды 😊')
+  ctx.reply('Нажми на кнопку ниже 👇', mainMenu)
 })
 
 // HTTP сервер для Render
