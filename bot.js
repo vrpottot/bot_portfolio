@@ -3,19 +3,6 @@ const http = require('http') // ← забыл добавить
 
 const bot = new Telegraf(process.env.BOT_TOKEN) // ← токен убери из кода!
 
-// Кнопка открытия Mini App
-const miniAppButton = Markup.keyboard([
-  [Markup.button.webApp('🚀 Открыть портфолио', 'https://t.me/VMportfolio_bot/devfolio')] // ← https:// и без точки в конце
-]).resize()
-
-// /start
-bot.start((ctx) => {
-  ctx.reply(
-    `👋 Привет, ${ctx.from.first_name}!\n\nЯ бот-портфолио разработчика VM.\nНажми кнопку ниже, чтобы посмотреть проекты 👇`,
-    miniAppButton
-  )
-})
-
 // /help
 bot.help((ctx) => {
   ctx.reply(
